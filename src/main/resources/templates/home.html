@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Corona Virus Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Corona Virus Tracker</h1>
+        <p>This application provides the current statistics for Corona Virus Pandemic</p>
+        <div class="jumbotron">
+            <h1 class="display-4" th:text="${totalReportedCases}">Hello, world!</h1>
+            <p class="lead">Total number of corona virus cases reported as of today across the globe.</p>
+        </div>
+        <div class="d-flex flex-row justify-content-between">
+            <div class="p-2">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="v-pills-confirmed-tab" data-toggle="pill" href="#v-pills-confirmed"
+                       role="tab" aria-controls="v-pills-confirmed" aria-selected="true">Confirmed Cases</a>
+                    <a class="nav-link" id="v-pills-deaths-tab" data-toggle="pill" href="#v-pills-deaths"
+                       role="tab" aria-controls="v-pills-deaths" aria-selected="false">Deaths</a>
+                    <a class="nav-link" id="v-pills-recovered-tab" data-toggle="pill" href="#v-pills-recovered"
+                       role="tab" aria-controls="v-pills-recovered" aria-selected="false">Recovered Cases</a>
+                </div>
+            </div>
+            <div class="p-2">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <div class="tab-pane fade show active" id="v-pills-confirmed" role="tabpanel"
+                         aria-labelledby="v-pills-confirmed-tab">
+                        <table id="confirm" class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>State</th>
+                                    <th>Country</th>
+                                    <th>Total cases reported</th>
+                                    <th>Changes since last day</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="confirmed : ${confirmedCases}">
+                                    <td th:text="${confirmed.state}"></td>
+                                    <td th:text="${confirmed.country}"></td>
+                                    <td th:text="${confirmed.latestConfirmedCases}">0</td>
+                                    <td th:text="${confirmed.diffFromPrevDay}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-deaths" role="tabpanel"
+                         aria-labelledby="v-pills-deaths-tab">
+                        <table id="death" class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>State</th>
+                                    <th>Country</th>
+                                    <th>Total Deaths reported</th>
+                                    <th>Changes since last day</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="fatality : ${fatalities}">
+                                    <td th:text="${fatality.state}"></td>
+                                    <td th:text="${fatality.country}"></td>
+                                    <td th:text="${fatality.latestDeaths}">0</td>
+                                    <td th:text="${fatality.diffFromPrevDay}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="v-pills-recovered" role="tabpanel"
+                         aria-labelledby="v-pills-recovered-tab">
+                        <table id="recover" class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>State</th>
+                                    <th>Country</th>
+                                    <th>Total recovered cases</th>
+                                    <th>Changes since last day</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="recovered : ${recoveredCases}">
+                                    <td th:text="${recovered.state}"></td>
+                                    <td th:text="${recovered.country}"></td>
+                                    <td th:text="${recovered.latestRecovered}">0</td>
+                                    <td th:text="${recovered.diffFromPrevDay}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+           $('#confirm').DataTable();
+           $('#death').DataTable();
+           $('#recover').DataTable();
+        });
+    </script>
+</body>
+</html>

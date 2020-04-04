@@ -1,117 +1,418 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Corona Virus Tracker</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- import the Material stylesheet -->
+    <link rel="stylesheet" href="styles/bundle.css">
 </head>
-<body>
-    <div class="container-fluid">
-        <h1>Corona Virus Tracker</h1>
-        <p>This application provides the current statistics for Corona Virus Pandemic</p>
-        <div class="jumbotron">
-            <h1 class="display-4" th:text="${totalReportedCases}">Hello, world!</h1>
-            <p class="lead">Total number of corona virus cases reported as of today across the globe.</p>
+
+<body class="mdc-typography">
+<aside class="mdc-drawer mdc-drawer--modal">
+    <div class="mdc-drawer__content">
+        <nav class="mdc-list">
+            <a class="mdc-list-item mdc-list-item--activated overview-item" href="#" aria-selected="true"
+               tabindex="0">
+                <span class="mdc-list-item__text">Home</span>
+            </a>
+            <a class="mdc-list-item accounts-item" href="#">
+                <span class="mdc-list-item__text">Active</span>
+            </a>
+            <a class="mdc-list-item bills-item" href="#">
+                <span class="mdc-list-item__text">Fatalities</span>
+            </a>
+            <a class="mdc-list-item budget-item" href="#">
+                <span class="mdc-list-item__text">Cured</span>
+            </a>
+        </nav>
+    </div>
+</aside>
+
+<div class="mdc-drawer-scrim"></div>
+<div class="mdc-drawer-app-content">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section">
+                <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+                <div class="mdc-tab-bar" role="tablist">
+                    <div class="mdc-tab-scroller mdc-tab-scroller--align-center">
+                        <div class="mdc-tab-scroller__scroll-area">
+                            <div class="mdc-tab-scroller__scroll-content">
+
+                                <button id="overview-tab" class="mdc-tab mdc-tab--min-width mdc-tab--active"
+                                        role="tab" aria-selected="true" tabindex="0">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Home</span>
+                                        </span>
+                                    <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                            <span
+                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+
+                                <button id="accounts-tab" class="mdc-tab mdc-tab--min-width" role="tab"
+                                        tabindex="0">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Active</span>
+                                        </span>
+                                    <span class="mdc-tab-indicator">
+                                            <span
+                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+
+                                <button id="bills-tab" class="mdc-tab mdc-tab--min-width" role="tab" tabindex="0">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Fatalities</span>
+                                        </span>
+                                    <span class="mdc-tab-indicator">
+                                            <span
+                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+
+                                <button id="budget-tab" class="mdc-tab mdc-tab--min-width" role="tab" tabindex="0">
+                                        <span class="mdc-tab__content">
+                                            <span class="mdc-tab__text-label">Cured</span>
+                                        </span>
+                                    <span class="mdc-tab-indicator">
+                                            <span
+                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                        </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-        <div class="d-flex flex-row justify-content-between">
-            <div class="p-2">
-                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <a class="nav-link active" id="v-pills-confirmed-tab" data-toggle="pill" href="#v-pills-confirmed"
-                       role="tab" aria-controls="v-pills-confirmed" aria-selected="true">Confirmed Cases</a>
-                    <a class="nav-link" id="v-pills-deaths-tab" data-toggle="pill" href="#v-pills-deaths"
-                       role="tab" aria-controls="v-pills-deaths" aria-selected="false">Deaths</a>
-                    <a class="nav-link" id="v-pills-recovered-tab" data-toggle="pill" href="#v-pills-recovered"
-                       role="tab" aria-controls="v-pills-recovered" aria-selected="false">Recovered Cases</a>
+    </header>
+
+    <main class="main-content">
+        <div class="mdc-top-app-bar--fixed-adjust">
+            <section id="overview-content" class="content-section">
+                <h1 class="mdc-typography--headline2">
+                    Corona Virus Tracker
+                </h1>
+                <div class="mdc-layout-grid card-container">
+                    <div class="mdc-layout-grid__inner">
+                        <div class="mdc-layout-grid__cell
+                                    mdc-layout-grid__cell--span-4-desktop
+                                    mdc-layout-grid__cell--span-6-tablet
+                                    mdc-layout-grid__cell--span-8-phone
+                                    card-wrapper">
+                            <div class="mdc-card mdc-card--outlined info-card">
+                                <div class="mdc-card__primary-action">
+                                    <div class="mdc-card__media mdc-card__media--square">
+                                        <div class="mdc-card__media-content info-card-content"
+                                             style="color: rgb(206, 206, 0);">
+                                            <h3 class="mdc-typography--headline4" th:text="${totalReportedCases}">
+                                            </h3>
+                                            <p>Total number of corona virus cases reported as of today across the
+                                                globe.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mdc-card__actions" style="background-color: rgb(206, 206, 0);">
+                                    <div class="mdc-card__action-buttons">
+                                        <button class="mdc-button mdc-card__action mdc-card__action--button"
+                                                id="showConfirmBtn">
+                                            <div class="mdc-button__ripple"></div>
+                                            <span class="mdc-button__label" style="color: white;">Show
+                                                    more...</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mdc-layout-grid__cell
+                                    mdc-layout-grid__cell--span-4-desktop
+                                    mdc-layout-grid__cell--span-6-tablet
+                                    mdc-layout-grid__cell--span-8-phone
+                                    card-wrapper">
+                            <div class="mdc-card mdc-card--outlined info-card">
+                                <div class="mdc-card__primary-action">
+                                    <div class="mdc-card__media mdc-card__media--square">
+                                        <div class="mdc-card__media-content info-card-content" style="color: red;">
+                                            <h3 class="mdc-typography--headline4" th:text="${totalFatalities}">
+                                            </h3>
+                                            <p>Total number of fatalities occurred as of today across the globe.</p>
+                                            <p>This virus has a current mortality rate of :
+                                                <b><span class="mdc-typography-headline5"
+                                                         th:text="${mortalityRate}"></span></b>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mdc-card__actions" style="background-color: red;">
+                                    <div class="mdc-card__action-buttons">
+                                        <button class="mdc-button mdc-card__action mdc-card__action--button"
+                                                id="showFatalBtn">
+                                            <div class="mdc-button__ripple"></div>
+                                            <span class="mdc-button__label" style="color: white;">Show
+                                                    more...</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mdc-layout-grid__cell
+                                    mdc-layout-grid__cell--span-4-desktop
+                                    mdc-layout-grid__cell--span-6-tablet
+                                    mdc-layout-grid__cell--span-8-phone
+                                    card-wrapper">
+                            <div class="mdc-card mdc-card--outlined info-card">
+                                <div class="mdc-card__primary-action">
+                                    <div class="mdc-card__media mdc-card__media--square">
+                                        <div class="mdc-card__media-content info-card-content"
+                                             style="color: green;">
+                                            <h3 class="mdc-typography--headline4" th:text="${totalRecovered}">
+                                            </h3>
+                                            <p>Total number of corona virus patients recovered as of today across
+                                                the
+                                                globe.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mdc-card__actions" style="background-color: green;">
+                                    <div class="mdc-card__action-buttons">
+                                        <button class="mdc-button mdc-card__action mdc-card__action--button"
+                                                id=showRecoverBtn>
+                                            <div class="mdc-button__ripple"></div>
+                                            <span class="mdc-button__label" style="color: white;">Show
+                                                    more...</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="p-2">
-                <div class="tab-content" id="v-pills-tabContent">
-                    <div class="tab-pane fade show active" id="v-pills-confirmed" role="tabpanel"
-                         aria-labelledby="v-pills-confirmed-tab">
-                        <table id="confirm" class="table">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>State</th>
-                                    <th>Country</th>
-                                    <th>Total cases reported</th>
-                                    <th>Changes since last day</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="confirmed : ${confirmedCases}">
-                                    <td th:text="${confirmed.state}"></td>
-                                    <td th:text="${confirmed.country}"></td>
-                                    <td th:text="${confirmed.latestConfirmedCases}">0</td>
-                                    <td th:text="${confirmed.diffFromPrevDay}">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane fade" id="v-pills-deaths" role="tabpanel"
-                         aria-labelledby="v-pills-deaths-tab">
-                        <table id="death" class="table">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>State</th>
-                                    <th>Country</th>
-                                    <th>Total Deaths reported</th>
-                                    <th>Changes since last day</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="fatality : ${fatalities}">
-                                    <td th:text="${fatality.state}"></td>
-                                    <td th:text="${fatality.country}"></td>
-                                    <td th:text="${fatality.latestDeaths}">0</td>
-                                    <td th:text="${fatality.diffFromPrevDay}">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane fade" id="v-pills-recovered" role="tabpanel"
-                         aria-labelledby="v-pills-recovered-tab">
-                        <table id="recover" class="table">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>State</th>
-                                    <th>Country</th>
-                                    <th>Total recovered cases</th>
-                                    <th>Changes since last day</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="recovered : ${recoveredCases}">
-                                    <td th:text="${recovered.state}"></td>
-                                    <td th:text="${recovered.country}"></td>
-                                    <td th:text="${recovered.latestRecovered}">0</td>
-                                    <td th:text="${recovered.diffFromPrevDay}">0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            </section>
+
+            <section id="accounts-content" class="content-section">
+                <h1 class="mdc-typography--headline2">
+                    Data for confirmed cases
+                </h1>
+                <p>
+                <div class="mdc-data-table">
+                    <table class="mdc-data-table__table" aria-label="Dessert calories">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Country
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">State
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Total
+                                Confirmed Cases</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Changes
+                                since last day</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
+                                Percentage
+                                change in last 24hr.</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row" th:each="confirmed : ${confirmedCases}">
+                            <td class="mdc-data-table__cell" th:text="${confirmed.country}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${confirmed.state}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${confirmed.latestConfirmedCases}">0
+                            </td>
+                            <td class="mdc-data-table__cell" th:text="${confirmed.diffFromPrevDay}">0</td>
+                            <td class="mdc-data-table__cell" th:text="${confirmed.percentDiff}">0.00</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+                </p>
+            </section>
+
+            <section id="bills-content" class="content-section">
+                <h1 class="mdc-typography--headline2">
+                    Data for fatalities
+                </h1>
+                <p>
+                <div class="mdc-data-table">
+                    <table class="mdc-data-table__table" aria-label="Dessert calories">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Country
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">State
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Total
+                                fatalities</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Changes
+                                since last day</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
+                                Percentage
+                                change in last 24hr.</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row" th:each="fatality : ${fatalities}">
+                            <td class="mdc-data-table__cell" th:text="${fatality.country}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${fatality.state}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${fatality.latestDeaths}">0
+                            </td>
+                            <td class="mdc-data-table__cell" th:text="${fatality.diffFromPrevDay}">0</td>
+                            <td class="mdc-data-table__cell" th:text="${fatality.percentDiff}">0.00</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </p>
+            </section>
+
+            <section id="budget-content" class="content-section">
+                <h1 class="mdc-typography--headline2">
+                    Data for recovered cases
+                </h1>
+                <p>
+                <div class="mdc-data-table">
+                    <table class="mdc-data-table__table" aria-label="Dessert calories">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Country
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">State
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Total
+                                recovered cases</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Changes
+                                since last day</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">
+                                Percentage
+                                change in last 24hr.</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row" th:each="recovered : ${recoveredCases}">
+                            <td class="mdc-data-table__cell" th:text="${recovered.country}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${recovered.state}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${recovered.latestRecovered}">0
+                            </td>
+                            <td class="mdc-data-table__cell" th:text="${recovered.diffFromPrevDay}">0</td>
+                            <td class="mdc-data-table__cell" th:text="${recovered.percentDiff}">0.00</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </p>
+            </section>
+        </div>
+    </main>
+</div>
+
+<div class="mdc-dialog" id="showConfirm">
+    <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+             aria-describedby="my-dialog-content">
+            <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+            <h2 class="mdc-dialog__title" id="my-dialog-title">
+                <!--
+   -->More Details for confirmed cases
+                <!--
+ -->
+            </h2>
+            <div class="mdc-dialog__content" id="my-dialog-content">
+                <p>
+                    Country with highest confirmed cases is
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${countryWithHighestConfirmedCases}"></span></b>
+                    with
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${highestConfirmedCasesByCountry}"></span></b>
+                    cases so far.
+                </p>
             </div>
+            <footer class="mdc-dialog__actions">
+                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                    <div class="mdc-button__ripple"></div>
+                    <span class="mdc-button__label">Close</span>
+                </button>
+            </footer>
         </div>
     </div>
+    <div class="mdc-dialog__scrim"></div>
+</div>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-        $(document).ready(function() {
-           $('#confirm').DataTable();
-           $('#death').DataTable();
-           $('#recover').DataTable();
-        });
-    </script>
+<div class="mdc-dialog" id="showFatal">
+    <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+             aria-describedby="my-dialog-content">
+            <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+            <h2 class="mdc-dialog__title" id="my-dialog-title">
+                <!--
+   -->More Details for fatalities
+                <!--
+ -->
+            </h2>
+            <div class="mdc-dialog__content" id="my-dialog-content">
+                <p>
+                    Country with highest fatalities is
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${countryWithHighestFatalities}"></span></b>
+                    with
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${highestFatalitiesByCountry}"></span></b>
+                    deaths so far.
+                </p>
+            </div>
+            <footer class="mdc-dialog__actions">
+                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                    <div class="mdc-button__ripple"></div>
+                    <span class="mdc-button__label">Close</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+    <div class="mdc-dialog__scrim"></div>
+</div>
+
+<div class="mdc-dialog" id="showRecover">
+    <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+             aria-describedby="my-dialog-content">
+            <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+            <h2 class="mdc-dialog__title" id="my-dialog-title">
+                <!--
+   -->More Details for recovered cases
+                <!--
+ -->
+            </h2>
+            <div class="mdc-dialog__content" id="my-dialog-content">
+                <p>
+                    Country with highest recovered cases is
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${countryWithHighestRecoveredCases}"></span></b>
+                    with
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${highestRecoveredCasesByCountry}"></span></b>
+                    recovered people.
+                </p>
+            </div>
+            <footer class="mdc-dialog__actions">
+                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                    <div class="mdc-button__ripple"></div>
+                    <span class="mdc-button__label">Close</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+    <div class="mdc-dialog__scrim"></div>
+</div>
+
+<!-- import the Material javascript file -->
+<script src="js/bundle.js" async></script>
 </body>
+
 </html>

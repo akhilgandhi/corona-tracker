@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -46,13 +47,13 @@ public class CoronaVirusDataService {
 
     /**
      * This method will make http request on scheduled basis for getting the data for confirmed cases,
-     * deaths and recovered cases every six hours.
+     * deaths and recovered cases every 2 hours.
      * @see <a href="https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">CSSEGISandData</a>
      * @throws IOException
      * @throws InterruptedException
      */
     @PostConstruct
-    @Scheduled(cron = "0 0 */6 * * *")
+    @Scheduled(cron = "0 0 */2 * * *")
     public void getCoronaVirusData() throws IOException, InterruptedException {
 
         List<ConfirmedData> confirmedStats = new ArrayList<>();
@@ -93,6 +94,7 @@ public class CoronaVirusDataService {
             int prevDayDiff = Integer.parseInt(record.get(record.size()-2));
             confirmedData.setLatestConfirmedCases(latestConfirmedCases);
             confirmedData.setDiffFromPrevDay(latestConfirmedCases - prevDayDiff);
+            confirmedData.setPercentDiff(new DecimalFormat("00.00").format(latestConfirmedCases == prevDayDiff ? 0.00 : (((latestConfirmedCases - prevDayDiff) * 100.00) / latestConfirmedCases)));
             confirmedStats.add(confirmedData);
         }
         this.allConfirmed = confirmedStats;
@@ -109,6 +111,7 @@ public class CoronaVirusDataService {
             int prevDayDiff = Integer.parseInt(record.get(record.size()-2));
             fatalities.setLatestDeaths(latestDeaths);
             fatalities.setDiffFromPrevDay(latestDeaths - prevDayDiff);
+            fatalities.setPercentDiff(new DecimalFormat("00.00").format(latestDeaths == prevDayDiff ? 0.00 : (((latestDeaths - prevDayDiff) * 100.00) / latestDeaths)));
             fatalStats.add(fatalities);
         }
         this.allDeaths = fatalStats;
@@ -124,6 +127,8 @@ public class CoronaVirusDataService {
             int latestRecovered = Integer.parseInt(record.get(record.size()-1));
             int prevDayDiff = Integer.parseInt(record.get(record.size()-2));
             recoveredData.setLatestRecovered(prevDayDiff);
+            recoveredData.setDiffFromPrevDay(latestRecovered - prevDayDiff);
+            recoveredData.setPercentDiff(new DecimalFormat("00.00").format(latestRecovered == prevDayDiff ? 0.00 : (((latestRecovered - prevDayDiff) * 100.00) / latestRecovered)));
             recoveredStats.add(recoveredData);
         }
         this.allRecovered = recoveredStats;

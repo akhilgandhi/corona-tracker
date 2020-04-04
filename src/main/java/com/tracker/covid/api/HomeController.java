@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -26,11 +28,87 @@ public class HomeController {
         List<Fatalities> allFatalities = coronaVirusDataService.getAllDeaths();
         List<RecoveredData> allRecovered = coronaVirusDataService.getAllRecovered();
         int totalReportedCases = allConfirmed.stream().mapToInt(ConfirmedData::getLatestConfirmedCases).sum();
+        int totalFatalities = allFatalities.stream().mapToInt(Fatalities::getLatestDeaths).sum();
+        int totalRecovered = allRecovered.stream().mapToInt(RecoveredData::getLatestRecovered).sum();
+        double mortalityRate = (totalFatalities*100.00)/totalReportedCases;
+        String countryWithHighestConfirmedCases = allConfirmed
+                .stream()
+                .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+                .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+                .get().getKey();
+        int highestConfirmedCasesByCountry = allConfirmed
+                .stream()
+                .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+                .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+                .get().getValue();
+        String countryWithHighestFatalities = allFatalities
+                .stream()
+                .collect(Collectors.groupingBy(Fatalities::getCountry, Collectors.summingInt(Fatalities::getLatestDeaths)))
+                .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+                .get().getKey();
+        int highestFatalitiesByCountry = allFatalities
+                .stream()
+                .collect(Collectors.groupingBy(Fatalities::getCountry, Collectors.summingInt(Fatalities::getLatestDeaths)))
+                .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+                .get().getValue();
+        String countryWithHighestRecoveredCases = allRecovered
+                .stream()
+                .collect(Collectors.groupingBy(RecoveredData::getCountry, Collectors.summingInt(RecoveredData::getLatestRecovered)))
+                .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+                .get().getKey();
+        int highestRecoveredCasesByCountry = allRecovered
+                .stream()
+                .collect(Collectors.groupingBy(RecoveredData::getCountry, Collectors.summingInt(RecoveredData::getLatestRecovered)))
+                .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+                .get().getValue();
+        allConfirmed
+                .stream()
+                .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .forEach(entry -> logger.info(entry.getKey() + " " + entry.getValue()));
         model.addAttribute("confirmedCases", allConfirmed);
         model.addAttribute("fatalities", allFatalities);
         model.addAttribute("recoveredCases", allRecovered);
         model.addAttribute("totalReportedCases", totalReportedCases);
+        model.addAttribute("totalFatalities", totalFatalities);
+        model.addAttribute("totalRecovered", totalRecovered);
+        model.addAttribute("mortalityRate", new DecimalFormat("00.00").format(mortalityRate));
+        model.addAttribute("countryWithHighestConfirmedCases", countryWithHighestConfirmedCases);
+        model.addAttribute("highestConfirmedCasesByCountry", highestConfirmedCasesByCountry);
+        model.addAttribute("countryWithHighestFatalities", countryWithHighestFatalities);
+        model.addAttribute("highestFatalitiesByCountry", highestFatalitiesByCountry);
+        model.addAttribute("countryWithHighestRecoveredCases", countryWithHighestRecoveredCases);
+        model.addAttribute("highestRecoveredCasesByCountry", highestRecoveredCasesByCountry);
         logger.info("Populating the model for display");
         return "home";
     }
+
+    /*allConfirmed.stream().
+    collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+            .forEach((s, confirmedData) -> logger.info(s + " " + confirmedData));
+    List<Integer> sums = allConfirmed
+            .stream()
+            .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+            .values().stream().collect(Collectors.toList());
+    Set<Map.Entry<String, Integer>> entries = allConfirmed
+            .stream()
+            .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+            .entrySet();
+        allConfirmed
+                .stream()
+                .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+            .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+            .toString();
+    Optional<Integer> max = sums.stream().max(Comparator.comparing(integer -> integer));
+    Optional<Map.Entry<String, Integer>> maxEntry = entries.stream().max(Comparator.comparing(Map.Entry::getValue));
+        logger.info(max.get().toString());
+        logger.info(maxEntry.get().toString());
+        logger.info(allConfirmed
+                .stream()
+                .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
+            .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
+            .get().getKey());*/
 }

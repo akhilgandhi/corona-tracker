@@ -30,7 +30,7 @@ public class HomeController {
         int totalReportedCases = allConfirmed.stream().mapToInt(ConfirmedData::getLatestConfirmedCases).sum();
         int totalFatalities = allFatalities.stream().mapToInt(Fatalities::getLatestDeaths).sum();
         int totalRecovered = allRecovered.stream().mapToInt(RecoveredData::getLatestRecovered).sum();
-        double mortalityRate = (totalFatalities*100.00)/totalReportedCases;
+        double mortalityRate = (totalFatalities*1000.00)/totalReportedCases;
         String countryWithHighestConfirmedCases = allConfirmed
                 .stream()
                 .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
@@ -41,6 +41,12 @@ public class HomeController {
                 .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
                 .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
                 .get().getValue();
+        int totalConfirmCasesIndia = allConfirmed
+                .stream()
+                .filter((name) -> (name.getCountry().equals("India")))
+                .map(ConfirmedData::getLatestConfirmedCases)
+                .findAny()
+                .orElse(null);
         String countryWithHighestFatalities = allFatalities
                 .stream()
                 .collect(Collectors.groupingBy(Fatalities::getCountry, Collectors.summingInt(Fatalities::getLatestDeaths)))
@@ -51,6 +57,12 @@ public class HomeController {
                 .collect(Collectors.groupingBy(Fatalities::getCountry, Collectors.summingInt(Fatalities::getLatestDeaths)))
                 .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
                 .get().getValue();
+        int fatalitiesIndia = allFatalities
+                .stream()
+                .filter((name) -> (name.getCountry().equals("India")))
+                .findAny()
+                .map(Fatalities::getLatestDeaths)
+                .orElse(null);
         String countryWithHighestRecoveredCases = allRecovered
                 .stream()
                 .collect(Collectors.groupingBy(RecoveredData::getCountry, Collectors.summingInt(RecoveredData::getLatestRecovered)))
@@ -61,14 +73,48 @@ public class HomeController {
                 .collect(Collectors.groupingBy(RecoveredData::getCountry, Collectors.summingInt(RecoveredData::getLatestRecovered)))
                 .entrySet().stream().max(Comparator.comparing(Map.Entry::getValue))
                 .get().getValue();
-        allConfirmed
+        int recoveredIndia = allRecovered
+                .stream()
+                .filter((name) -> (name.getCountry().equals("India")))
+                .findAny()
+                .map(RecoveredData::getLatestRecovered)
+                .orElse(null);
+        Map<String, Integer> topFiveHighCasesCountries = allConfirmed
                 .stream()
                 .collect(Collectors.groupingBy(ConfirmedData::getCountry, Collectors.summingInt(ConfirmedData::getLatestConfirmedCases)))
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .limit(5)
-                .forEach(entry -> logger.info(entry.getKey() + " " + entry.getValue()));
+                .collect(
+                        LinkedHashMap::new,
+                        (map, item) -> map.put(item.getKey(), item.getValue()),
+                        Map::putAll
+                );
+        Map<String, Integer> topFiveHighDeathsCountries = allFatalities
+                .stream()
+                .collect(Collectors.groupingBy(Fatalities::getCountry, Collectors.summingInt(Fatalities::getLatestDeaths)))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .collect(
+                        LinkedHashMap::new,
+                        (map, item) -> map.put(item.getKey(), item.getValue()),
+                        Map::putAll
+                );
+        Map<String, Integer> topFiveHighRecoverCountries = allRecovered
+                .stream()
+                .collect(Collectors.groupingBy(RecoveredData::getCountry, Collectors.summingInt(RecoveredData::getLatestRecovered)))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(5)
+                .collect(
+                        LinkedHashMap::new,
+                        (map, item) -> map.put(item.getKey(), item.getValue()),
+                        Map::putAll
+                );
         model.addAttribute("confirmedCases", allConfirmed);
         model.addAttribute("fatalities", allFatalities);
         model.addAttribute("recoveredCases", allRecovered);
@@ -82,6 +128,12 @@ public class HomeController {
         model.addAttribute("highestFatalitiesByCountry", highestFatalitiesByCountry);
         model.addAttribute("countryWithHighestRecoveredCases", countryWithHighestRecoveredCases);
         model.addAttribute("highestRecoveredCasesByCountry", highestRecoveredCasesByCountry);
+        model.addAttribute("totalConfirmCasesIndia", totalConfirmCasesIndia);
+        model.addAttribute("fatalitiesIndia", fatalitiesIndia);
+        model.addAttribute("recoveredIndia", recoveredIndia);
+        model.addAttribute("topFiveHighCasesCountries", topFiveHighCasesCountries);
+        model.addAttribute("topFiveHighDeathsCountries", topFiveHighDeathsCountries);
+        model.addAttribute("topFiveHighRecoverCountries", topFiveHighRecoverCountries);
         logger.info("Populating the model for display");
         return "home";
     }

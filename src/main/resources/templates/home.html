@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;1,600;1,800&display=swap" rel="stylesheet">
     <!-- import the Material stylesheet -->
     <link rel="stylesheet" href="styles/bundle.css">
 </head>
@@ -36,7 +37,7 @@
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section">
-                <a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+                <a href="#" class="mdc-top-app-bar__navigation-icon"><span class="material-icons">menu</span></a>
                 <div class="mdc-tab-bar" role="tablist">
                     <div class="mdc-tab-scroller mdc-tab-scroller--align-center">
                         <div class="mdc-tab-scroller__scroll-area">
@@ -108,7 +109,7 @@
                                     mdc-layout-grid__cell--span-6-tablet
                                     mdc-layout-grid__cell--span-8-phone
                                     card-wrapper">
-                            <div class="mdc-card mdc-card--outlined info-card">
+                            <div class="mdc-card info-card">
                                 <div class="mdc-card__primary-action">
                                     <div class="mdc-card__media mdc-card__media--square">
                                         <div class="mdc-card__media-content info-card-content"
@@ -137,14 +138,14 @@
                                     mdc-layout-grid__cell--span-6-tablet
                                     mdc-layout-grid__cell--span-8-phone
                                     card-wrapper">
-                            <div class="mdc-card mdc-card--outlined info-card">
+                            <div class="mdc-card info-card">
                                 <div class="mdc-card__primary-action">
                                     <div class="mdc-card__media mdc-card__media--square">
                                         <div class="mdc-card__media-content info-card-content" style="color: red;">
                                             <h3 class="mdc-typography--headline4" th:text="${totalFatalities}">
                                             </h3>
                                             <p>Total number of fatalities occurred as of today across the globe.</p>
-                                            <p>This virus has a current mortality rate of :
+                                            <p>This virus has a current mortality rate (deaths per 1000 cases) of :
                                                 <b><span class="mdc-typography-headline5"
                                                          th:text="${mortalityRate}"></span></b>
                                             </p>
@@ -168,7 +169,7 @@
                                     mdc-layout-grid__cell--span-6-tablet
                                     mdc-layout-grid__cell--span-8-phone
                                     card-wrapper">
-                            <div class="mdc-card mdc-card--outlined info-card">
+                            <div class="mdc-card info-card">
                                 <div class="mdc-card__primary-action">
                                     <div class="mdc-card__media mdc-card__media--square">
                                         <div class="mdc-card__media-content info-card-content"
@@ -333,6 +334,33 @@
                              th:text="${highestConfirmedCasesByCountry}"></span></b>
                     cases so far.
                 </p>
+                <p>
+                    Number of confirmed cases in India are
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${totalConfirmCasesIndia}"></span></b>.
+                </p>
+                <p>
+                Top 5 countries with total confirmed cases
+                <div class="mdc-data-table">
+                    <table class="mdc-data-table__table" aria-label="Highest Confirm">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Country
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Total
+                                confirmed cases</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row" th:each="confirmed : ${topFiveHighCasesCountries}">
+                            <td class="mdc-data-table__cell" th:text="${confirmed.key}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${confirmed.value}">0
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </p>
             </div>
             <footer class="mdc-dialog__actions">
                 <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
@@ -366,6 +394,33 @@
                              th:text="${highestFatalitiesByCountry}"></span></b>
                     deaths so far.
                 </p>
+                <p>
+                    Total number of fatalities in India are
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${fatalitiesIndia}"></span></b>.
+                </p>
+                <p>
+                Top 5 countries with total deaths
+                <div class="mdc-data-table">
+                    <table class="mdc-data-table__table" aria-label="Highest Confirm">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Country
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Total
+                                deaths</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row" th:each="fatal : ${topFiveHighDeathsCountries}">
+                            <td class="mdc-data-table__cell" th:text="${fatal.key}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${fatal.value}">0
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </p>
             </div>
             <footer class="mdc-dialog__actions">
                 <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
@@ -398,6 +453,33 @@
                     <b><span class="mdc-typography-headline5"
                              th:text="${highestRecoveredCasesByCountry}"></span></b>
                     recovered people.
+                </p>
+                <p>
+                    Total number of cured patients in India are
+                    <b><span class="mdc-typography-headline5"
+                             th:text="${recoveredIndia}"></span></b>.
+                </p>
+                <p>
+                Top 5 countries with total cured patients
+                <div class="mdc-data-table">
+                    <table class="mdc-data-table__table" aria-label="Highest Confirm">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Country
+                            </th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Total
+                                cured</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row" th:each="recover : ${topFiveHighRecoverCountries}">
+                            <td class="mdc-data-table__cell" th:text="${recover.key}">Sample</td>
+                            <td class="mdc-data-table__cell" th:text="${recover.value}">0
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
                 </p>
             </div>
             <footer class="mdc-dialog__actions">
